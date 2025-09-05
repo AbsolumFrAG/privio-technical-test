@@ -2,7 +2,7 @@
 # Multi-stage build for React/Vite application
 
 # Development stage
-FROM node:20-alpine AS development
+FROM node:22-alpine AS development
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -25,7 +25,7 @@ EXPOSE 5173
 CMD ["pnpm", "dev", "--host"]
 
 # Build stage
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
