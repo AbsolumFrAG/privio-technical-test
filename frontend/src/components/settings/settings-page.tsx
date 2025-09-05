@@ -1,32 +1,36 @@
-import { useEffect } from 'react';
-import { SteamIntegration } from '../steam/steam-integration';
-import { PrivacySettings } from './privacy-settings';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { User, Database, Palette } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context';
-import { toast } from 'sonner';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/contexts/auth-context";
+import { User } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { SteamIntegration } from "../steam/steam-integration";
+import { PrivacySettings } from "./privacy-settings";
 
 export function SettingsPage() {
   const { refreshUser } = useAuth();
 
-  // Handle Steam callback parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    
-    if (urlParams.get('steamLinked') === 'true') {
-      const steamUsername = urlParams.get('steamUsername');
+
+    if (urlParams.get("steamLinked") === "true") {
+      const steamUsername = urlParams.get("steamUsername");
       toast.success(`Steam account ${steamUsername} linked successfully!`);
-      
-      // Clean up URL parameters and refresh user data
-      window.history.replaceState({}, '', window.location.pathname);
-      refreshUser(); // Refresh user data from API
-    } else if (urlParams.get('steamError')) {
-      const errorMessage = urlParams.get('steamError');
-      toast.error(errorMessage || 'Steam linking failed');
-      
+
+      window.history.replaceState({}, "", window.location.pathname);
+      refreshUser();
+    } else if (urlParams.get("steamError")) {
+      const errorMessage = urlParams.get("steamError");
+      toast.error(errorMessage || "Steam linking failed");
+
       // Clean up URL parameters
-      window.history.replaceState({}, '', window.location.pathname);
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, [refreshUser]);
 
@@ -67,42 +71,6 @@ export function SettingsPage() {
 
       {/* Privacy Settings */}
       <PrivacySettings />
-
-      {/* Data Management */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Database className="h-5 w-5" />
-            Data Management
-          </CardTitle>
-          <CardDescription>
-            Export or delete your data, manage backups.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Data management tools will be available here in future updates.
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Appearance Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Palette className="h-5 w-5" />
-            Appearance
-          </CardTitle>
-          <CardDescription>
-            Customize the look and feel of GameTracker.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Theme and appearance options will be available here in future updates.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 }

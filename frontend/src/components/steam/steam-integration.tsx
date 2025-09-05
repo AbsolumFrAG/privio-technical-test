@@ -1,16 +1,36 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/contexts/auth-context';
-import { apiClient } from '@/lib/api';
-import { toast } from 'sonner';
-import { ExternalLink, Gamepad2, UserCheck, Settings, RotateCw, Unlink2, AlertCircle } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/contexts/auth-context";
+import { apiClient } from "@/lib/api";
+import {
+  AlertCircle,
+  ExternalLink,
+  Gamepad2,
+  RotateCw,
+  Settings,
+  Unlink2,
+  UserCheck,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface SteamProfile {
   steamId: string;
@@ -31,7 +51,7 @@ interface SteamSyncStatus {
   steamGameCount: number;
   history: Array<{
     id: string;
-    status: 'PENDING' | 'SUCCESS' | 'ERROR';
+    status: "PENDING" | "SUCCESS" | "ERROR";
     gamesProcessed?: number;
     gamesImported?: number;
     gamesUpdated?: number;
@@ -51,7 +71,7 @@ export function SteamIntegration() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [showUnlinkDialog, setShowUnlinkDialog] = useState(false);
-  const [manualSteamId, setManualSteamId] = useState('');
+  const [manualSteamId, setManualSteamId] = useState("");
   const [keepGamesOnUnlink, setKeepGamesOnUnlink] = useState(true);
   const [syncSettings, setSyncSettings] = useState({
     skipExisting: true,
@@ -84,7 +104,7 @@ export function SteamIntegration() {
         setSyncStatus(statusResponse.data);
       }
     } catch (error) {
-      console.error('Failed to load Steam data:', error);
+      console.error("Failed to load Steam data:", error);
     }
   };
 
@@ -92,7 +112,7 @@ export function SteamIntegration() {
     setIsLinking(true);
     try {
       const response = await apiClient.getSteamAuthUrl();
-      
+
       if (response.error) {
         toast.error(response.error);
         return;
@@ -100,48 +120,48 @@ export function SteamIntegration() {
 
       if (response.data?.authUrl) {
         // Store state for validation when user returns
-        localStorage.setItem('steamAuthState', response.data.state);
-        
+        localStorage.setItem("steamAuthState", response.data.state);
+
         // Create message listener for popup communication
         const handleMessage = (event: MessageEvent) => {
           // Verify origin for security
-          if (event.origin !== window.location.origin.replace('5173', '3001')) {
+          if (event.origin !== window.location.origin.replace("5173", "3001")) {
             return;
           }
-          
-          if (event.data.type === 'STEAM_AUTH_SUCCESS') {
+
+          if (event.data.type === "STEAM_AUTH_SUCCESS") {
             // Steam authentication successful
-            toast.success('Steam account linked successfully!');
+            toast.success("Steam account linked successfully!");
             setIsLinking(false);
-            window.removeEventListener('message', handleMessage);
-            
+            window.removeEventListener("message", handleMessage);
+
             // Refresh user data by reloading the page
             setTimeout(() => {
               window.location.reload();
             }, 1000);
-          } else if (event.data.type === 'STEAM_AUTH_ERROR') {
+          } else if (event.data.type === "STEAM_AUTH_ERROR") {
             // Steam authentication failed
-            toast.error(event.data.error || 'Steam authentication failed');
+            toast.error(event.data.error || "Steam authentication failed");
             setIsLinking(false);
-            window.removeEventListener('message', handleMessage);
+            window.removeEventListener("message", handleMessage);
           }
         };
-        
+
         // Add message listener
-        window.addEventListener('message', handleMessage);
-        
+        window.addEventListener("message", handleMessage);
+
         // Open Steam authentication in new window
         const authWindow = window.open(
           response.data.authUrl,
-          'steamAuth',
-          'width=800,height=600,scrollbars=yes,resizable=yes'
+          "steamAuth",
+          "width=800,height=600,scrollbars=yes,resizable=yes"
         );
 
         // Fallback: Poll for window close in case postMessage fails
         const checkClosed = setInterval(() => {
           if (authWindow?.closed) {
             clearInterval(checkClosed);
-            window.removeEventListener('message', handleMessage);
+            window.removeEventListener("message", handleMessage);
             setIsLinking(false);
             // Refresh user data to check if linking was successful
             setTimeout(() => {
@@ -149,11 +169,11 @@ export function SteamIntegration() {
             }, 1000);
           }
         }, 1000);
-        
+
         // Cleanup after 5 minutes
         setTimeout(() => {
           clearInterval(checkClosed);
-          window.removeEventListener('message', handleMessage);
+          window.removeEventListener("message", handleMessage);
           if (!authWindow?.closed) {
             authWindow?.close();
           }
@@ -161,34 +181,34 @@ export function SteamIntegration() {
         }, 5 * 60 * 1000);
       }
     } catch (error) {
-      console.error('Steam OAuth error:', error);
-      toast.error('Failed to initiate Steam authentication');
+      console.error("Steam OAuth error:", error);
+      toast.error("Failed to initiate Steam authentication");
       setIsLinking(false);
     }
   };
 
   const handleManualLink = async () => {
     if (!manualSteamId.trim()) {
-      toast.error('Please enter a valid Steam ID');
+      toast.error("Please enter a valid Steam ID");
       return;
     }
 
     setIsLinking(true);
     try {
       const response = await apiClient.linkSteamAccount(manualSteamId);
-      
+
       if (response.error) {
         toast.error(response.error);
         return;
       }
 
-      toast.success('Steam account linked successfully!');
+      toast.success("Steam account linked successfully!");
       setShowLinkDialog(false);
-      setManualSteamId('');
+      setManualSteamId("");
       window.location.reload(); // Refresh to get updated user data
     } catch (error) {
-      console.error('Manual Steam link error:', error);
-      toast.error('Failed to link Steam account');
+      console.error("Manual Steam link error:", error);
+      toast.error("Failed to link Steam account");
     } finally {
       setIsLinking(false);
     }
@@ -198,18 +218,18 @@ export function SteamIntegration() {
     setIsUnlinking(true);
     try {
       const response = await apiClient.unlinkSteamAccount(keepGamesOnUnlink);
-      
+
       if (response.error) {
         toast.error(response.error);
         return;
       }
 
-      toast.success('Steam account unlinked successfully');
+      toast.success("Steam account unlinked successfully");
       setShowUnlinkDialog(false);
       window.location.reload(); // Refresh to get updated user data
     } catch (error) {
-      console.error('Steam unlink error:', error);
-      toast.error('Failed to unlink Steam account');
+      console.error("Steam unlink error:", error);
+      toast.error("Failed to unlink Steam account");
     } finally {
       setIsUnlinking(false);
     }
@@ -219,7 +239,7 @@ export function SteamIntegration() {
     setIsSyncing(true);
     try {
       const response = await apiClient.syncSteamLibrary(syncSettings);
-      
+
       if (response.error) {
         toast.error(response.error);
         return;
@@ -230,16 +250,16 @@ export function SteamIntegration() {
         toast.success(
           `Sync completed! Imported: ${result.gamesImported}, Updated: ${result.gamesUpdated}, Skipped: ${result.gamesSkipped}`
         );
-        
+
         if (result.errors.length > 0) {
           toast.warning(`${result.errors.length} errors occurred during sync`);
         }
-        
+
         loadSteamData(); // Refresh data
       }
     } catch (error) {
-      console.error('Steam sync error:', error);
-      toast.error('Failed to sync Steam library');
+      console.error("Steam sync error:", error);
+      toast.error("Failed to sync Steam library");
     } finally {
       setIsSyncing(false);
     }
@@ -252,21 +272,27 @@ export function SteamIntegration() {
       const response = await apiClient.updateSteamSettings({
         steamSyncEnabled: !steamProfile.steamSyncEnabled,
       });
-      
+
       if (response.error) {
         toast.error(response.error);
         return;
       }
 
-      setSteamProfile(prev => prev ? {
-        ...prev,
-        steamSyncEnabled: !prev.steamSyncEnabled
-      } : null);
-      
-      toast.success(`Steam sync ${steamProfile.steamSyncEnabled ? 'disabled' : 'enabled'}`);
+      setSteamProfile((prev) =>
+        prev
+          ? {
+              ...prev,
+              steamSyncEnabled: !prev.steamSyncEnabled,
+            }
+          : null
+      );
+
+      toast.success(
+        `Steam sync ${steamProfile.steamSyncEnabled ? "disabled" : "enabled"}`
+      );
     } catch (error) {
-      console.error('Failed to update Steam settings:', error);
-      toast.error('Failed to update Steam settings');
+      console.error("Failed to update Steam settings:", error);
+      toast.error("Failed to update Steam settings");
     }
   };
 
@@ -274,7 +300,7 @@ export function SteamIntegration() {
     setIsFixingImages(true);
     try {
       const response = await apiClient.fixSteamImages();
-      
+
       if (response.error) {
         toast.error(response.error);
         return;
@@ -286,20 +312,20 @@ export function SteamIntegration() {
         );
       }
     } catch (error) {
-      console.error('Failed to fix Steam images:', error);
-      toast.error('Failed to fix Steam game images');
+      console.error("Failed to fix Steam images:", error);
+      toast.error("Failed to fix Steam game images");
     } finally {
       setIsFixingImages(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -312,7 +338,8 @@ export function SteamIntegration() {
             Steam Integration
           </CardTitle>
           <CardDescription>
-            Link your Steam account to import your game library and keep it synchronized.
+            Link your Steam account to import your game library and keep it
+            synchronized.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -323,9 +350,9 @@ export function SteamIntegration() {
               className="flex items-center gap-2"
             >
               <Gamepad2 className="h-4 w-4" />
-              {isLinking ? 'Connecting...' : 'Link with Steam'}
+              {isLinking ? "Connecting..." : "Link with Steam"}
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={() => setShowLinkDialog(true)}
@@ -340,7 +367,8 @@ export function SteamIntegration() {
               <DialogHeader>
                 <DialogTitle>Link Steam Account Manually</DialogTitle>
                 <DialogDescription>
-                  Enter your Steam ID (64-bit format) to link your account manually.
+                  Enter your Steam ID (64-bit format) to link your account
+                  manually.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
@@ -353,7 +381,7 @@ export function SteamIntegration() {
                     onChange={(e) => setManualSteamId(e.target.value)}
                   />
                   <p className="text-sm text-muted-foreground mt-1">
-                    You can find your Steam ID at{' '}
+                    You can find your Steam ID at{" "}
                     <a
                       href="https://steamid.io/"
                       target="_blank"
@@ -375,7 +403,7 @@ export function SteamIntegration() {
                     onClick={handleManualLink}
                     disabled={isLinking || !manualSteamId.trim()}
                   >
-                    {isLinking ? 'Linking...' : 'Link Account'}
+                    {isLinking ? "Linking..." : "Link Account"}
                   </Button>
                 </div>
               </div>
@@ -421,7 +449,7 @@ export function SteamIntegration() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.open(steamProfile.profileUrl, '_blank')}
+                  onClick={() => window.open(steamProfile.profileUrl, "_blank")}
                 >
                   <ExternalLink className="h-4 w-4 mr-1" />
                   View Profile
@@ -467,20 +495,22 @@ export function SteamIntegration() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="minimumPlaytime">Minimum Playtime (minutes)</Label>
+                <Label htmlFor="minimumPlaytime">
+                  Minimum Playtime (minutes)
+                </Label>
                 <Input
                   id="minimumPlaytime"
                   type="number"
                   value={syncSettings.minimumPlaytime}
                   onChange={(e) =>
-                    setSyncSettings(prev => ({
+                    setSyncSettings((prev) => ({
                       ...prev,
                       minimumPlaytime: parseInt(e.target.value) || 0,
                     }))
                   }
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="maxGames">Max Games to Process</Label>
                 <Input
@@ -488,7 +518,7 @@ export function SteamIntegration() {
                   type="number"
                   value={syncSettings.maxGamesToProcess}
                   onChange={(e) =>
-                    setSyncSettings(prev => ({
+                    setSyncSettings((prev) => ({
                       ...prev,
                       maxGamesToProcess: parseInt(e.target.value) || 1000,
                     }))
@@ -502,17 +532,23 @@ export function SteamIntegration() {
                 <Switch
                   checked={syncSettings.skipExisting}
                   onCheckedChange={(checked) =>
-                    setSyncSettings(prev => ({ ...prev, skipExisting: checked }))
+                    setSyncSettings((prev) => ({
+                      ...prev,
+                      skipExisting: checked,
+                    }))
                   }
                 />
                 <Label>Skip existing games</Label>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={syncSettings.updatePlaytime}
                   onCheckedChange={(checked) =>
-                    setSyncSettings(prev => ({ ...prev, updatePlaytime: checked }))
+                    setSyncSettings((prev) => ({
+                      ...prev,
+                      updatePlaytime: checked,
+                    }))
                   }
                 />
                 <Label>Update playtime from Steam</Label>
@@ -538,24 +574,27 @@ export function SteamIntegration() {
                 <p className="text-sm text-muted-foreground">
                   {syncStatus.lastSync
                     ? formatDate(syncStatus.lastSync)
-                    : 'Never synchronized'
-                  }
+                    : "Never synchronized"}
                 </p>
               </div>
-              
+
               <div className="flex gap-2">
                 <Button
                   onClick={handleSync}
-                  disabled={!syncStatus.canSync || isSyncing || !steamProfile?.steamSyncEnabled}
+                  disabled={
+                    !syncStatus.canSync ||
+                    isSyncing ||
+                    !steamProfile?.steamSyncEnabled
+                  }
                 >
-                  {isSyncing ? 'Syncing...' : 'Sync Now'}
+                  {isSyncing ? "Syncing..." : "Sync Now"}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleFixImages}
                   disabled={isFixingImages}
                 >
-                  {isFixingImages ? 'Fixing Images...' : 'Fix Images'}
+                  {isFixingImages ? "Fixing Images..." : "Fix Images"}
                 </Button>
               </div>
             </div>
@@ -581,11 +620,11 @@ export function SteamIntegration() {
                         <div className="flex items-center gap-2">
                           <Badge
                             variant={
-                              log.status === 'SUCCESS'
-                                ? 'default'
-                                : log.status === 'ERROR'
-                                ? 'destructive'
-                                : 'secondary'
+                              log.status === "SUCCESS"
+                                ? "default"
+                                : log.status === "ERROR"
+                                ? "destructive"
+                                : "secondary"
                             }
                           >
                             {log.status}
@@ -594,14 +633,17 @@ export function SteamIntegration() {
                             {formatDate(log.startedAt)}
                           </span>
                         </div>
-                        {log.status === 'SUCCESS' && (
+                        {log.status === "SUCCESS" && (
                           <p className="text-sm text-muted-foreground">
-                            Processed: {log.gamesProcessed}, Imported: {log.gamesImported}, 
-                            Updated: {log.gamesUpdated}, Skipped: {log.gamesSkipped}
+                            Processed: {log.gamesProcessed}, Imported:{" "}
+                            {log.gamesImported}, Updated: {log.gamesUpdated},
+                            Skipped: {log.gamesSkipped}
                           </p>
                         )}
                         {log.errorMessage && (
-                          <p className="text-sm text-red-600">{log.errorMessage}</p>
+                          <p className="text-sm text-red-600">
+                            {log.errorMessage}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -619,7 +661,8 @@ export function SteamIntegration() {
           <DialogHeader>
             <DialogTitle>Unlink Steam Account</DialogTitle>
             <DialogDescription>
-              Are you sure you want to unlink your Steam account? This action cannot be undone.
+              Are you sure you want to unlink your Steam account? This action
+              cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -632,8 +675,8 @@ export function SteamIntegration() {
             </div>
             <p className="text-sm text-muted-foreground">
               {keepGamesOnUnlink
-                ? 'Your imported Steam games will remain in your library as regular games.'
-                : 'All imported Steam games will be removed from your library.'}
+                ? "Your imported Steam games will remain in your library as regular games."
+                : "All imported Steam games will be removed from your library."}
             </p>
             <div className="flex justify-end gap-2">
               <Button
@@ -647,7 +690,7 @@ export function SteamIntegration() {
                 onClick={handleUnlink}
                 disabled={isUnlinking}
               >
-                {isUnlinking ? 'Unlinking...' : 'Unlink Steam Account'}
+                {isUnlinking ? "Unlinking..." : "Unlink Steam Account"}
               </Button>
             </div>
           </div>

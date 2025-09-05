@@ -1,19 +1,33 @@
-import { BarChart3, Compass, Library, Settings, Users } from "lucide-react";
+import {
+  BarChart3,
+  Compass,
+  Library,
+  Settings,
+  Users,
+  LogOut,
+  Gamepad2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import "./App.css";
 import { LoginForm } from "./components/auth/login-form";
 import { RegisterForm } from "./components/auth/register-form";
 import { GameList } from "./components/games/game-list";
-import { ModeToggle } from "./components/mode-toggle";
 import { DiscoveryPage } from "./components/public/discovery-page";
 import { SettingsPage } from "./components/settings/settings-page";
 import { GameStats } from "./components/stats/game-stats";
-import { ThemeProvider } from "./components/theme-provider";
 import { Button } from "./components/ui/button";
 import { UsersPage } from "./components/users/users-page";
 import { AuthProvider, useAuth } from "./contexts/auth-context";
 import { GamesProvider, useGames } from "./contexts/games-context";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "./components/ui/avatar";
 
 function AuthenticatedApp() {
   const { user, logout } = useAuth();
@@ -30,83 +44,168 @@ function AuthenticatedApp() {
   }, [loadGames, activeView]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">GameTracker</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              Welcome, {user?.username}
-            </span>
-            <Button variant="outline" onClick={logout}>
-              Sign Out
-            </Button>
-            <ModeToggle />
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground">
+                <Gamepad2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight">
+                  GameTracker
+                </h1>
+                <p className="text-xs text-muted-foreground leading-none">
+                  Your Gaming Hub
+                </p>
+              </div>
+            </div>
+
+            {/* User Menu */}
+            <div className="flex items-center gap-3">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-9 w-9 rounded-full"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="text-xs font-medium">
+                        {user?.username?.charAt(0)?.toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="sr-only">Open user menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <div className="flex items-center gap-2 p-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="text-xs">
+                        {user?.username?.charAt(0)?.toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {user?.username}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setActiveView("settings")}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Navigation */}
-      <nav className="border-b bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="flex gap-1">
-            <Button
-              variant={activeView === "library" ? "default" : "ghost"}
-              onClick={() => setActiveView("library")}
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-            >
-              <Library className="w-4 h-4 mr-2" />
-              My Library
-            </Button>
-            <Button
-              variant={activeView === "discovery" ? "default" : "ghost"}
-              onClick={() => setActiveView("discovery")}
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-            >
-              <Compass className="w-4 h-4 mr-2" />
-              Discover
-            </Button>
-            <Button
-              variant={activeView === "users" ? "default" : "ghost"}
-              onClick={() => setActiveView("users")}
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Users
-            </Button>
-            <Button
-              variant={activeView === "stats" ? "default" : "ghost"}
-              onClick={() => setActiveView("stats")}
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Statistics
-            </Button>
-            <Button
-              variant={activeView === "settings" ? "default" : "ghost"}
-              onClick={() => setActiveView("settings")}
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
-          </div>
-        </div>
-      </nav>
+      {/* Main Layout */}
+      <div className="flex">
+        {/* Sidebar Navigation */}
+        <aside className="sticky top-16 h-[calc(100vh-4rem)] w-64 border-r bg-card/50 backdrop-blur">
+          <nav className="p-4 space-y-2">
+            {[
+              {
+                key: "library",
+                label: "My Library",
+                icon: Library,
+                desc: "Your game collection",
+              },
+              {
+                key: "discovery",
+                label: "Discover",
+                icon: Compass,
+                desc: "Find new games",
+              },
+              {
+                key: "stats",
+                label: "Statistics",
+                icon: BarChart3,
+                desc: "Gaming insights",
+              },
+              {
+                key: "users",
+                label: "Community",
+                icon: Users,
+                desc: "Other players",
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeView === item.key;
 
-      <main className="container mx-auto px-4 py-8">
-        {activeView === "library" ? (
-          <GameList />
-        ) : activeView === "discovery" ? (
-          <DiscoveryPage />
-        ) : activeView === "users" ? (
-          <UsersPage />
-        ) : activeView === "stats" ? (
-          <GameStats />
-        ) : (
-          <SettingsPage />
-        )}
-      </main>
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setActiveView(item.key as typeof activeView)}
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-left group hover:bg-accent/50 ${
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-primary/20"
+                      : "text-foreground/70 hover:text-foreground"
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  <Icon
+                    className={`w-5 h-5 transition-transform group-hover:scale-110 ${
+                      isActive ? "text-primary-foreground" : ""
+                    }`}
+                  />
+                  <div>
+                    <div
+                      className={`font-medium text-sm ${
+                        isActive ? "text-primary-foreground" : ""
+                      }`}
+                    >
+                      {item.label}
+                    </div>
+                    <div
+                      className={`text-xs transition-colors ${
+                        isActive
+                          ? "text-primary-foreground/70"
+                          : "text-muted-foreground group-hover:text-foreground/60"
+                      }`}
+                    >
+                      {item.desc}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="container mx-auto px-6 py-8 max-w-7xl">
+            <div className="animate-in fade-in-0 slide-in-from-right-4 duration-500">
+              {activeView === "library" ? (
+                <GameList />
+              ) : activeView === "discovery" ? (
+                <DiscoveryPage />
+              ) : activeView === "users" ? (
+                <UsersPage />
+              ) : activeView === "stats" ? (
+                <GameStats />
+              ) : (
+                <SettingsPage />
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
@@ -115,26 +214,57 @@ function UnauthenticatedApp() {
   const [showRegister, setShowRegister] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="w-full max-w-md px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-950 dark:via-purple-950 dark:to-slate-950 flex items-center justify-center relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+      <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
+      <div className="absolute top-0 -right-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000" />
+      <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-4000" />
+
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-md px-4">
+        {/* Logo and Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">GameTracker</h1>
-          <p className="text-muted-foreground">
-            {showRegister ? "Create your account" : "Sign in to your account"}
-          </p>
-          <div className="absolute top-4 right-4">
-            <ModeToggle />
+          <div className="flex items-center justify-center mb-6">
+            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600 text-white shadow-2xl">
+              <Gamepad2 className="w-8 h-8" />
+            </div>
           </div>
+
+          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+            GameTracker
+          </h1>
+          <p className="text-slate-300 text-lg mb-2">
+            {showRegister ? "Join the Gaming Community" : "Welcome Back, Gamer"}
+          </p>
+          <p className="text-slate-400 text-sm">
+            {showRegister
+              ? "Create your account to start tracking your games"
+              : "Sign in to access your gaming library"}
+          </p>
         </div>
 
-        {showRegister ? <RegisterForm /> : <LoginForm />}
+        {/* Auth Forms */}
+        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
+          {showRegister ? <RegisterForm /> : <LoginForm />}
+        </div>
 
-        <div className="text-center mt-6">
-          <Button variant="link" onClick={() => setShowRegister(!showRegister)}>
+        {/* Toggle Auth Mode */}
+        <div className="text-center mt-8">
+          <Button
+            variant="ghost"
+            onClick={() => setShowRegister(!showRegister)}
+            className="text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+          >
             {showRegister
               ? "Already have an account? Sign in"
               : "Don't have an account? Sign up"}
           </Button>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-12 text-slate-500 text-xs">
+          <p>Track • Rate • Discover • Connect</p>
         </div>
       </div>
     </div>
@@ -160,14 +290,12 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <AuthProvider>
-        <GamesProvider>
-          <AppContent />
-          <Toaster />
-        </GamesProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <GamesProvider>
+        <AppContent />
+        <Toaster />
+      </GamesProvider>
+    </AuthProvider>
   );
 }
 
