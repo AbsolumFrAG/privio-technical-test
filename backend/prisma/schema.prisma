@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GameStatus {
+  PLAYING
+  COMPLETED
+  DROPPED
+  BACKLOG
+}
+
+enum GameSource {
+  MANUAL
+  STEAM
+}
+
+enum SteamSyncStatus {
+  PENDING
+  SUCCESS
+  ERROR
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Steam integration
+  steamId          String?   @unique
+  steamUsername    String?
+  steamAvatarUrl   String?
+  steamLinkedAt    DateTime?
+  steamSyncEnabled Boolean   @default(true)
+  lastSteamSync    DateTime?
+
+  games         Game[]
+  refreshTokens RefreshToken[]
+  steamSyncLogs SteamSyncLog[]
+
+  @@map("users")
+}
+
+model Game {
+  id           String     @id @default(cuid())
+  title        String
+  rating       Float?     @db.DoublePrecision // 1-5 stars with 0.5 increments
+  hoursPlayed  Float      @default(0) @db.DoublePrecision
+  status       GameStatus @default(BACKLOG)
+  imageUrl     String?
+  lastPlayedAt DateTime?
+  notes        String?    @db.Text
+  isDeleted    Boolean    @default(false) // Soft delete
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Steam integration
+  source          GameSource @default(MANUAL)
+  steamAppId      String?
+  steamName       String?
+  steamPlaytime   Float?     @db.DoublePrecision // Steam's playtime in minutes
+  steamLastPlayed DateTime?
+  steamImageUrl   String?
+  isHiddenOnSteam Boolean    @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, steamAppId], name: "unique_user_steam_game")
+  @@index([source])
+  @@index([steamAppId])
+  @@map("games")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+// Steam game metadata cache
+model SteamGame {
+  steamAppId       String   @id
+  name             String
+  headerImage      String?
+  shortDescription String?  @db.Text
+  developers       String[]
+  publishers       String[]
+  genres           String[]
+  releaseDate      String?
+  price            String?
+  metacritic       Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("steam_games")
+}
+
+// Steam synchronization log
+model SteamSyncLog {
+  id             String          @id @default(cuid())
+  userId         String
+  status         SteamSyncStatus
+  gamesProcessed Int?
+  gamesImported  Int?
+  gamesUpdated   Int?
+  gamesSkipped   Int?
+  errorMessage   String?         @db.Text
+  startedAt      DateTime        @default(now())
+  completedAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("steam_sync_logs")
+}
