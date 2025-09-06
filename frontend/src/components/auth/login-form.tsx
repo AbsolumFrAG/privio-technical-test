@@ -37,23 +37,23 @@ export function LoginForm() {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      setError("All fields are required");
+      setError("Tous les champs sont obligatoires");
       return;
     }
 
     try {
       await login(formData.email, formData.password);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : "Connexion échouée");
     }
   };
 
   return (
     <Card className="w-full border-border/20 bg-card/50 backdrop-blur-sm shadow-2xl">
       <CardHeader className="text-center pb-6">
-        <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+        <CardTitle className="text-2xl font-bold">Bon retour</CardTitle>
         <CardDescription className="text-base">
-          Sign in to access your gaming library
+          Connectez-vous pour accéder à votre bibliothèque de jeux
         </CardDescription>
       </CardHeader>
 
@@ -65,7 +65,7 @@ export function LoginForm() {
               htmlFor="email"
               className="block text-sm font-medium text-foreground/80"
             >
-              Email Address
+              Adresse email
             </label>
             <div
               className={`relative transition-all duration-200 ${
@@ -81,7 +81,7 @@ export function LoginForm() {
                 onFocus={() => setFieldFocus("email")}
                 onBlur={() => setFieldFocus(null)}
                 disabled={isLoading}
-                placeholder="Enter your email address"
+                placeholder="Saisissez votre adresse email"
                 className={`pl-10 h-12 transition-all duration-200 ${
                   fieldFocus === "email"
                     ? "ring-2 ring-primary/50 border-primary/50"
@@ -99,7 +99,7 @@ export function LoginForm() {
               htmlFor="password"
               className="block text-sm font-medium text-foreground/80"
             >
-              Password
+              Mot de passe
             </label>
             <div
               className={`relative transition-all duration-200 ${
@@ -115,7 +115,7 @@ export function LoginForm() {
                 onFocus={() => setFieldFocus("password")}
                 onBlur={() => setFieldFocus(null)}
                 disabled={isLoading}
-                placeholder="Enter your password"
+                placeholder="Saisissez votre mot de passe"
                 className={`pl-10 pr-10 h-12 transition-all duration-200 ${
                   fieldFocus === "password"
                     ? "ring-2 ring-primary/50 border-primary/50"
@@ -158,10 +158,10 @@ export function LoginForm() {
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Signing in...
+                Connexion...
               </div>
             ) : (
-              "Sign In"
+              "Se connecter"
             )}
           </Button>
         </form>

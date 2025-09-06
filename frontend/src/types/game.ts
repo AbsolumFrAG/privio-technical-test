@@ -82,14 +82,14 @@ export interface GamesResponse {
 }
 
 export const GAME_STATUS_LABELS: Record<GameStatus, string> = {
-  [GameStatus.PLAYING]: "Currently Playing",
-  [GameStatus.COMPLETED]: "Completed",
-  [GameStatus.DROPPED]: "Dropped",
-  [GameStatus.BACKLOG]: "Backlog",
+  [GameStatus.PLAYING]: "En cours",
+  [GameStatus.COMPLETED]: "Terminé",
+  [GameStatus.DROPPED]: "Abandonné",
+  [GameStatus.BACKLOG]: "En attente",
 };
 
 export const GAME_SOURCE_LABELS: Record<GameSource, string> = {
-  [GameSource.MANUAL]: "Manual",
+  [GameSource.MANUAL]: "Manuel",
   [GameSource.STEAM]: "Steam",
 };
 

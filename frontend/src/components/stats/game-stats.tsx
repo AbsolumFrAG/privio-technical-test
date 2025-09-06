@@ -131,8 +131,7 @@ export function GameStats() {
   const formatHours = (hours: number): string => {
     if (hours === 0) return "0h";
     if (hours < 1) return `${Math.round(hours * 60)}m`;
-    if (hours < 10) return `${hours.toFixed(1)}h`;
-    return `${Math.round(hours)}h`;
+    return `${hours.toFixed(2)}h`;
   };
 
   const formatRating = (rating: number): string => {
@@ -148,10 +147,10 @@ export function GameStats() {
           </div>
           <div className="text-left">
             <h1 className="text-3xl font-bold tracking-tight">
-              Gaming Analytics
+              Analyses Gaming
             </h1>
             <p className="text-lg text-muted-foreground">
-              Deep insights into your gaming journey and preferences
+              Analyses approfondies de votre parcours et préférences gaming
             </p>
           </div>
         </div>
@@ -162,7 +161,7 @@ export function GameStats() {
         <Card className="bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border-blue-500/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-400">
-              Game Library
+              Bibliothèque de Jeux
             </CardTitle>
             <div className="p-2 bg-blue-500/20 rounded-lg">
               <Hash className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -172,7 +171,7 @@ export function GameStats() {
             <div className="text-3xl font-bold mb-2">{stats.totalGames}</div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               <Gamepad2 className="w-4 h-4" />
-              Games tracked
+              Jeux suivis
             </p>
           </CardContent>
         </Card>
@@ -180,7 +179,7 @@ export function GameStats() {
         <Card className="bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border-purple-500/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-purple-600 dark:text-purple-400">
-              Total Playtime
+              Temps de Jeu Total
             </CardTitle>
             <div className="p-2 bg-purple-500/20 rounded-lg">
               <Timer className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -192,7 +191,7 @@ export function GameStats() {
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               <Zap className="w-4 h-4" />
-              {Math.round(stats.totalHoursPlayed / 24)} days of gaming
+              {(stats.totalHoursPlayed / 24).toFixed(2)} jours de jeu
             </p>
           </CardContent>
         </Card>
@@ -200,7 +199,7 @@ export function GameStats() {
         <Card className="bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
-              Average Rating
+              Note Moyenne
             </CardTitle>
             <div className="p-2 bg-yellow-500/20 rounded-lg">
               <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400 fill-current" />
@@ -219,7 +218,7 @@ export function GameStats() {
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               <Award className="w-4 h-4" />
-              From {stats.gamesWithRatings} rated games
+              Sur {stats.gamesWithRatings} jeux notés
             </p>
           </CardContent>
         </Card>
@@ -227,7 +226,7 @@ export function GameStats() {
         <Card className="bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent border-green-500/20 hover:shadow-lg transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-medium text-green-600 dark:text-green-400">
-              Completion Rate
+              Taux de Complétion
             </CardTitle>
             <div className="p-2 bg-green-500/20 rounded-lg">
               <Trophy className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -239,7 +238,7 @@ export function GameStats() {
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               <Target className="w-4 h-4" />
-              Achievement rate
+              Taux de réussite
             </p>
           </CardContent>
         </Card>

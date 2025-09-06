@@ -157,11 +157,11 @@ export function GameList() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold tracking-tight">
-                  My Gaming Library
+                  Ma Bibliothèque de Jeux
                 </h1>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span>
-                    {totalGames} {totalGames === 1 ? "game" : "games"}
+                    {totalGames} {totalGames === 1 ? "jeu" : "jeux"}
                   </span>
                   {games.some((g) => g.rating) && (
                     <span>
@@ -172,7 +172,7 @@ export function GameList() {
                           .reduce((acc, g) => acc + (g.rating || 0), 0) /
                         games.filter((g) => g.rating).length
                       ).toFixed(1)}{" "}
-                      avg rating
+                      note moyenne
                     </span>
                   )}
                 </div>
@@ -187,7 +187,7 @@ export function GameList() {
               className="bg-background/50 backdrop-blur-sm border-border/50 hover:bg-accent/50 transition-all duration-200"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Game
+              Ajouter un Jeu
             </Button>
           </div>
         </div>
@@ -210,7 +210,7 @@ export function GameList() {
                   }, 0)}
                 </div>
                 <div className="text-xs text-green-600/80 font-medium">
-                  Completed
+                  Terminés
                 </div>
               </CardContent>
             </Card>
@@ -225,7 +225,7 @@ export function GameList() {
                   }
                 </div>
                 <div className="text-xs text-blue-600/80 font-medium">
-                  Currently Playing
+                  En Cours
                 </div>
               </CardContent>
             </Card>
@@ -233,12 +233,10 @@ export function GameList() {
             <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20">
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  {Math.round(
-                    games.reduce((acc, g) => acc + (g.hoursPlayed || 0), 0)
-                  )}
+                  {games.reduce((acc, g) => acc + (g.hoursPlayed || 0), 0).toFixed(2)}
                 </div>
                 <div className="text-xs text-purple-600/80 font-medium">
-                  Hours Played
+                  Heures Jouées
                 </div>
               </CardContent>
             </Card>
@@ -253,7 +251,7 @@ export function GameList() {
                   }
                 </div>
                 <div className="text-xs text-orange-600/80 font-medium">
-                  In Backlog
+                  En Attente
                 </div>
               </CardContent>
             </Card>
@@ -279,7 +277,7 @@ export function GameList() {
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
-                placeholder="Search your games... (title, genre, notes)"
+                placeholder="Rechercher vos jeux... (titre, genre, notes)"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="pl-12 h-12 text-base bg-background/50 border-border/50 focus:bg-background transition-all duration-200"
@@ -289,7 +287,7 @@ export function GameList() {
                   variant="secondary"
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
                 >
-                  {games.length} found
+                  {games.length} trouvé(s)
                 </Badge>
               )}
             </div>
@@ -299,10 +297,10 @@ export function GameList() {
               <Select value={selectedStatus} onValueChange={handleStatusFilter}>
                 <SelectTrigger className="sm:w-[200px] h-10 bg-background/50 border-border/50">
                   <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <SelectValue placeholder="All Status" />
+                  <SelectValue placeholder="Tous les Statuts" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="all">Tous les Statuts</SelectItem>
                   {Object.values(GameStatusConstants).map((status) => (
                     <SelectItem key={status} value={status}>
                       <div className="flex items-center gap-2">
@@ -319,10 +317,10 @@ export function GameList() {
               <Select value={selectedSource} onValueChange={handleSourceFilter}>
                 <SelectTrigger className="sm:w-[200px] h-10 bg-background/50 border-border/50">
                   <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <SelectValue placeholder="All Sources" />
+                  <SelectValue placeholder="Toutes les Sources" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="all">Toutes les Sources</SelectItem>
                   {Object.values(GameSourceConstants).map((source) => (
                     <SelectItem key={source} value={source}>
                       <div className="flex items-center gap-2">
@@ -336,7 +334,7 @@ export function GameList() {
                 </SelectContent>
               </Select>
 
-              {/* Clear Filters */}
+              {/* Supprimer les Filtres */}
               {(selectedStatus !== "all" ||
                 selectedSource !== "all" ||
                 searchTerm) && (
@@ -351,7 +349,7 @@ export function GameList() {
                   }}
                   className="h-10 px-4 text-sm bg-background/50 border-border/50"
                 >
-                  Clear Filters
+                  Supprimer les Filtres
                 </Button>
               )}
             </div>
@@ -363,14 +361,14 @@ export function GameList() {
       <div className="flex items-center justify-between">
         <div className="flex gap-2 overflow-x-auto pb-2">
           <span className="text-sm font-medium text-muted-foreground mr-2 flex items-center">
-            Sort by:
+            Trier par:
           </span>
           {[
-            { key: "title", label: "Title" },
-            { key: "rating", label: "Rating" },
-            { key: "hoursPlayed", label: "Hours" },
-            { key: "createdAt", label: "Added" },
-            { key: "lastPlayedAt", label: "Last Played" },
+            { key: "title", label: "Titre" },
+            { key: "rating", label: "Note" },
+            { key: "hoursPlayed", label: "Heures" },
+            { key: "createdAt", label: "Ajouté" },
+            { key: "lastPlayedAt", label: "Dernière Partie" },
           ].map(({ key, label }) => (
             <Button
               key={key}
@@ -399,10 +397,10 @@ export function GameList() {
               <Gamepad2 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-6 w-6 text-primary" />
             </div>
             <p className="mt-6 text-lg font-medium text-muted-foreground">
-              Loading your games...
+              Chargement de vos jeux...
             </p>
             <p className="text-sm text-muted-foreground">
-              Organizing your digital library
+              Organisation de votre bibliothèque numérique
             </p>
           </CardContent>
         </Card>
@@ -419,14 +417,14 @@ export function GameList() {
 
             <h3 className="text-xl font-semibold mb-3">
               {filters.search || filters.status
-                ? "No games found"
-                : "Welcome to GameTracker!"}
+                ? "Aucun jeu trouvé"
+                : "Bienvenue sur GameTracker !"}
             </h3>
 
             <p className="text-muted-foreground mb-6 max-w-md">
               {filters.search || filters.status
-                ? "Try adjusting your search terms or filters to find the games you're looking for."
-                : "Start building your gaming library by adding your first game. Track your progress, rate your favorites, and discover new experiences."}
+                ? "Essayez d'ajuster vos termes de recherche ou vos filtres pour trouver les jeux que vous recherchez."
+                : "Commencez à construire votre bibliothèque de jeux en ajoutant votre premier jeu. Suivez vos progrès, notez vos favoris et découvrez de nouvelles expériences."}
             </p>
 
             <div className="flex gap-3">
@@ -440,7 +438,7 @@ export function GameList() {
                     setFilters({});
                   }}
                 >
-                  Clear Filters
+                  Supprimer les Filtres
                 </Button>
               ) : (
                 <Button
@@ -448,7 +446,7 @@ export function GameList() {
                   className="bg-gradient-to-r from-primary to-primary/90"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Your First Game
+                  Ajouter Votre Premier Jeu
                 </Button>
               )}
             </div>
@@ -459,9 +457,9 @@ export function GameList() {
           {/* Results Summary */}
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>
-              Showing {games.length} of {totalGames} games
+              Affichage de {games.length} sur {totalGames} jeux
               {(filters.search || filters.status || filters.source) &&
-                " (filtered)"}
+                " (filtrés)"}
             </span>
           </div>
 
@@ -520,11 +518,11 @@ export function GameList() {
         isOpen={!!deletingGameId}
         onClose={() => setDeletingGameId(null)}
         onConfirm={handleDeleteGame}
-        title="Delete Game"
+        title="Supprimer le Jeu"
         description={
           deletingGameData
-            ? `Are you sure you want to delete "${deletingGameData.title}"? This action cannot be undone.`
-            : "Are you sure you want to delete this game?"
+            ? `Êtes-vous sûr de vouloir supprimer "${deletingGameData.title}" ? Cette action ne peut pas être annulée.`
+            : "Êtes-vous sûr de vouloir supprimer ce jeu ?"
         }
         isLoading={isSubmitting}
       />

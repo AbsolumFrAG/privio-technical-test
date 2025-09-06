@@ -113,8 +113,8 @@ export function GamesProvider({ children }: GamesProviderProps) {
 
         if (response.data) {
           const newGame = response.data as Game;
-          setGames((prevGames) => [newGame, ...prevGames]);
-          setTotalGames((prev) => prev + 1);
+          // Reload the games list to respect current filters, pagination, and sorting
+          await loadGames();
           return newGame;
         }
 
@@ -126,7 +126,7 @@ export function GamesProvider({ children }: GamesProviderProps) {
         setIsLoading(false);
       }
     },
-    []
+    [loadGames]
   );
 
   const updateGame = useCallback(
@@ -144,9 +144,8 @@ export function GamesProvider({ children }: GamesProviderProps) {
 
         if (response.data) {
           const updatedGame = response.data as Game;
-          setGames((prevGames) =>
-            prevGames.map((game) => (game.id === gameId ? updatedGame : game))
-          );
+          // Reload the games list to respect current filters, pagination, and sorting
+          await loadGames();
           return updatedGame;
         }
 
@@ -158,7 +157,7 @@ export function GamesProvider({ children }: GamesProviderProps) {
         setIsLoading(false);
       }
     },
-    []
+    [loadGames]
   );
 
   const deleteGame = useCallback(async (gameId: string): Promise<boolean> => {
@@ -173,8 +172,8 @@ export function GamesProvider({ children }: GamesProviderProps) {
         return false;
       }
 
-      setGames((prevGames) => prevGames.filter((game) => game.id !== gameId));
-      setTotalGames((prev) => prev - 1);
+      // Reload the games list to respect current filters, pagination, and sorting
+      await loadGames();
       return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete game");
@@ -182,7 +181,7 @@ export function GamesProvider({ children }: GamesProviderProps) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [loadGames]);
 
   const setFilters = useCallback((newFilters: Partial<GameFilters>) => {
     setFiltersState((prevFilters) => ({ ...prevFilters, ...newFilters }));

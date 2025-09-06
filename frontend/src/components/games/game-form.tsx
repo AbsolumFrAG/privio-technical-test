@@ -63,15 +63,15 @@ export function GameForm({
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = "Title is required";
+      newErrors.title = "Le titre est obligatoire";
     }
 
     if (formData.rating < 0 || formData.rating > 5) {
-      newErrors.rating = "Rating must be between 0 and 5";
+      newErrors.rating = "La note doit être entre 0 et 5";
     }
 
     if (formData.hoursPlayed < 0) {
-      newErrors.hoursPlayed = "Hours played cannot be negative";
+      newErrors.hoursPlayed = "Les heures jouées ne peuvent pas être négatives";
     }
 
     setErrors(newErrors);
@@ -129,22 +129,22 @@ export function GameForm({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{game ? "Edit Game" : "Add New Game"}</DialogTitle>
+          <DialogTitle>{game ? "Éditer le Jeu" : "Ajouter un Nouveau Jeu"}</DialogTitle>
           <DialogDescription>
             {game
-              ? "Update your game information and status."
-              : "Add a new game to your library."}
+              ? "Mettez à jour les informations et le statut de votre jeu."
+              : "Ajoutez un nouveau jeu à votre bibliothèque."}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
+            <Label htmlFor="title">Titre *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
-              placeholder="Enter game title"
+              placeholder="Saisissez le titre du jeu"
               aria-invalid={!!errors.title}
             />
             {errors.title && (
@@ -154,7 +154,7 @@ export function GameForm({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="rating">Rating</Label>
+              <Label htmlFor="rating">Note</Label>
               <Select
                 value={formData.rating.toString()}
                 onValueChange={(value) =>
@@ -162,10 +162,10 @@ export function GameForm({
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select rating" />
+                  <SelectValue placeholder="Sélectionnez une note" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">No rating</SelectItem>
+                  <SelectItem value="0">Aucune note</SelectItem>
                   {RATING_OPTIONS.map((rating) => (
                     <SelectItem key={rating} value={rating.toString()}>
                       {rating} ⭐
@@ -179,7 +179,7 @@ export function GameForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="hoursPlayed">Hours Played</Label>
+              <Label htmlFor="hoursPlayed">Heures Jouées</Label>
               <Input
                 id="hoursPlayed"
                 type="number"
@@ -202,7 +202,7 @@ export function GameForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
+            <Label htmlFor="status">Statut</Label>
             <Select
               value={formData.status}
               onValueChange={(value) => handleInputChange("status", value)}
@@ -232,7 +232,7 @@ export function GameForm({
               id="notes"
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
-              placeholder="Your thoughts, progress notes, etc..."
+              placeholder="Vos pensées, notes de progrès, etc..."
               rows={3}
             />
           </div>
@@ -244,7 +244,7 @@ export function GameForm({
               onClick={handleReset}
               disabled={isLoading}
             >
-              Reset
+              Reinitialiser
             </Button>
             <Button
               type="button"
@@ -252,10 +252,10 @@ export function GameForm({
               onClick={onClose}
               disabled={isLoading}
             >
-              Cancel
+              Annuler
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving..." : game ? "Update Game" : "Add Game"}
+              {isLoading ? "Sauvegarde..." : game ? "Mettre à jour le Jeu" : "Ajouter le Jeu"}
             </Button>
           </DialogFooter>
         </form>

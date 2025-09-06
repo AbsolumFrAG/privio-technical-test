@@ -59,7 +59,7 @@ function AuthenticatedApp() {
                   GameTracker
                 </h1>
                 <p className="text-xs text-muted-foreground leading-none">
-                  Your Gaming Hub
+                  Votre Hub Gaming
                 </p>
               </div>
             </div>
@@ -77,7 +77,7 @@ function AuthenticatedApp() {
                         {user?.username?.charAt(0)?.toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="sr-only">Open user menu</span>
+                    <span className="sr-only">Ouvrir le menu utilisateur</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -99,12 +99,12 @@ function AuthenticatedApp() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => setActiveView("settings")}>
                     <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                    Paramètres
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    Sign out
+                    Se déconnecter
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -121,27 +121,27 @@ function AuthenticatedApp() {
             {[
               {
                 key: "library",
-                label: "My Library",
+                label: "Ma Bibliothèque",
                 icon: Library,
-                desc: "Your game collection",
+                desc: "Votre collection de jeux",
               },
               {
                 key: "discovery",
-                label: "Discover",
+                label: "Découvrir",
                 icon: Compass,
-                desc: "Find new games",
+                desc: "Trouver de nouveaux jeux",
               },
               {
                 key: "stats",
-                label: "Statistics",
+                label: "Statistiques",
                 icon: BarChart3,
-                desc: "Gaming insights",
+                desc: "Analyses de jeu",
               },
               {
                 key: "users",
-                label: "Community",
+                label: "Communauté",
                 icon: Users,
-                desc: "Other players",
+                desc: "Autres joueurs",
               },
             ].map((item) => {
               const Icon = item.icon;
@@ -235,12 +235,12 @@ function UnauthenticatedApp() {
             GameTracker
           </h1>
           <p className="text-slate-300 text-lg mb-2">
-            {showRegister ? "Join the Gaming Community" : "Welcome Back, Gamer"}
+            {showRegister ? "Rejoindre la Communauté Gaming" : "Bon retour, Joueur"}
           </p>
           <p className="text-slate-400 text-sm">
             {showRegister
-              ? "Create your account to start tracking your games"
-              : "Sign in to access your gaming library"}
+              ? "Créez votre compte pour commencer à suivre vos jeux"
+              : "Connectez-vous pour accéder à votre bibliothèque de jeux"}
           </p>
         </div>
 
@@ -257,14 +257,14 @@ function UnauthenticatedApp() {
             className="text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
           >
             {showRegister
-              ? "Already have an account? Sign in"
-              : "Don't have an account? Sign up"}
+              ? "Vous avez déjà un compte ? Connectez-vous"
+              : "Vous n'avez pas de compte ? Inscrivez-vous"}
           </Button>
         </div>
 
         {/* Footer */}
         <div className="text-center mt-12 text-slate-500 text-xs">
-          <p>Track • Rate • Discover • Connect</p>
+          <p>Suivre • Noter • Découvrir • Connecter</p>
         </div>
       </div>
     </div>
@@ -279,7 +279,7 @@ function AppContent() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading...</p>
+          <p className="mt-4 text-muted-foreground">Chargement...</p>
         </div>
       </div>
     );

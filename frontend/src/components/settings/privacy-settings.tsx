@@ -21,7 +21,7 @@ export function PrivacySettings() {
       });
 
       if (response.error) {
-        toast.error(`Failed to update privacy settings: ${response.error}`);
+        toast.error(`Échec de la mise à jour des paramètres de confidentialité : ${response.error}`);
         return;
       }
 
@@ -30,12 +30,12 @@ export function PrivacySettings() {
       
       toast.success(
         newPublicState 
-          ? "Your profile is now public - other users can search for you and view your game library"
-          : "Your profile is now private - only you can see your game library"
+          ? "Votre profil est maintenant public - les autres utilisateurs peuvent vous rechercher et voir votre bibliothèque de jeux"
+          : "Votre profil est maintenant privé - vous seul pouvez voir votre bibliothèque de jeux"
       );
     } catch (error) {
       console.error("Privacy settings update error:", error);
-      toast.error("Failed to update privacy settings. Please try again.");
+      toast.error("Échec de la mise à jour des paramètres de confidentialité. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
@@ -46,10 +46,10 @@ export function PrivacySettings() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
-          Privacy Settings
+          Paramètres de Confidentialité
         </CardTitle>
         <CardDescription>
-          Control who can see your gaming library and statistics.
+          Contrôlez qui peut voir votre bibliothèque de jeux et vos statistiques.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -63,20 +63,20 @@ export function PrivacySettings() {
                 {isPublic ? (
                   <>
                     <Eye className="h-4 w-4 text-green-600" />
-                    Public Profile
+                    Profil Public
                   </>
                 ) : (
                   <>
                     <EyeOff className="h-4 w-4 text-gray-600" />
-                    Private Profile
+                    Profil Privé
                   </>
                 )}
               </Label>
             </div>
             <p className="text-sm text-muted-foreground">
               {isPublic 
-                ? "Other users can search for you and view your game library"
-                : "Only you can see your game library - your profile won't appear in search results"
+                ? "Les autres utilisateurs peuvent vous rechercher et voir votre bibliothèque de jeux"
+                : "Vous seul pouvez voir votre bibliothèque de jeux - votre profil n'apparaîtra pas dans les résultats de recherche"
               }
             </p>
           </div>
@@ -93,12 +93,12 @@ export function PrivacySettings() {
             {isPublic ? (
               <>
                 <Users className="h-4 w-4 text-green-600" />
-                What others can see:
+                Ce que les autres peuvent voir :
               </>
             ) : (
               <>
                 <Lock className="h-4 w-4 text-gray-600" />
-                What's private:
+                Ce qui est privé :
               </>
             )}
           </h4>
@@ -106,29 +106,29 @@ export function PrivacySettings() {
           <ul className="text-sm text-muted-foreground space-y-1">
             <li className="flex items-center gap-2">
               <div className={`w-1.5 h-1.5 rounded-full ${isPublic ? 'bg-green-500' : 'bg-gray-400'}`} />
-              Your username and profile information
+              Votre nom d'utilisateur et informations de profil
             </li>
             <li className="flex items-center gap-2">
               <div className={`w-1.5 h-1.5 rounded-full ${isPublic ? 'bg-green-500' : 'bg-gray-400'}`} />
-              Your complete game library
+              Votre bibliothèque de jeux complète
             </li>
             <li className="flex items-center gap-2">
               <div className={`w-1.5 h-1.5 rounded-full ${isPublic ? 'bg-green-500' : 'bg-gray-400'}`} />
-              Game ratings, hours played, and play status
+              Notes des jeux, heures jouées et statut de jeu
             </li>
             <li className="flex items-center gap-2">
               <div className={`w-1.5 h-1.5 rounded-full ${isPublic ? 'bg-green-500' : 'bg-gray-400'}`} />
-              Gaming statistics and achievements
+              Statistiques de jeu et réussites
             </li>
             <li className="flex items-center gap-2">
               <div className={`w-1.5 h-1.5 rounded-full ${isPublic ? 'bg-green-500' : 'bg-gray-400'}`} />
-              Steam profile information (if linked)
+              Informations du profil Steam (si lié)
             </li>
           </ul>
           
           {!isPublic && (
             <p className="text-xs text-muted-foreground mt-3 italic">
-              Note: Your games may still contribute to anonymous public statistics
+              Note : Vos jeux peuvent encore contribuer aux statistiques publiques anonymes
             </p>
           )}
         </div>
@@ -139,11 +139,11 @@ export function PrivacySettings() {
               <Users className="h-5 w-5 text-blue-600 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                  Your profile is discoverable
+                  Votre profil est découvrable
                 </p>
                 <p className="text-sm text-blue-700 dark:text-blue-200 mt-1">
-                  Other users can find you through the Users search and explore your gaming preferences. 
-                  You can make your profile private again at any time.
+                  Les autres utilisateurs peuvent vous trouver via la recherche d'utilisateurs et explorer vos préférences de jeu. 
+                  Vous pouvez rendre votre profil privé à nouveau à tout moment.
                 </p>
               </div>
             </div>
@@ -151,12 +151,12 @@ export function PrivacySettings() {
         )}
 
         <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium mb-2">Privacy Information</h4>
+          <h4 className="text-sm font-medium mb-2">Informations de Confidentialité</h4>
           <div className="text-xs text-muted-foreground space-y-1">
-            <p>• Your email address is never shared with other users</p>
-            <p>• Private notes on games are never visible to others</p>
-            <p>• You can change your privacy settings at any time</p>
-            <p>• Deleted games are immediately removed from public view</p>
+            <p>• Votre adresse email n'est jamais partagée avec d'autres utilisateurs</p>
+            <p>• Les notes privées sur les jeux ne sont jamais visibles par les autres</p>
+            <p>• Vous pouvez modifier vos paramètres de confidentialité à tout moment</p>
+            <p>• Les jeux supprimés sont immédiatement retirés de la vue publique</p>
           </div>
         </div>
       </CardContent>

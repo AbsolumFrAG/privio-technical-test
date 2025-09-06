@@ -46,29 +46,29 @@ export function RegisterForm() {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setError("All fields are required");
+      setError("Tous les champs sont obligatoires");
       return;
     }
 
     if (formData.username.length < 3) {
-      setError("Username must be at least 3 characters long");
+      setError("Le nom d'utilisateur doit contenir au moins 3 caractères");
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      setError("Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Les mots de passe ne correspondent pas");
       return;
     }
 
     try {
       await register(formData.email, formData.username, formData.password);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(err instanceof Error ? err.message : "Inscription échouée");
     }
   };
 
@@ -85,9 +85,9 @@ export function RegisterForm() {
   return (
     <Card className="w-full border-border/20 bg-card/50 backdrop-blur-sm shadow-2xl">
       <CardHeader className="text-center pb-6">
-        <CardTitle className="text-2xl font-bold">Join GameTracker</CardTitle>
+        <CardTitle className="text-2xl font-bold">Rejoindre GameTracker</CardTitle>
         <CardDescription className="text-base">
-          Create your account to start tracking your games
+          Créez votre compte pour commencer à suivre vos jeux
         </CardDescription>
       </CardHeader>
 
@@ -99,7 +99,7 @@ export function RegisterForm() {
               htmlFor="email"
               className="block text-sm font-medium text-foreground/80"
             >
-              Email Address
+              Adresse email
             </label>
             <div
               className={`relative transition-all duration-200 ${
@@ -115,7 +115,7 @@ export function RegisterForm() {
                 onFocus={() => setFieldFocus("email")}
                 onBlur={() => setFieldFocus(null)}
                 disabled={isLoading}
-                placeholder="Enter your email address"
+                placeholder="Saisissez votre adresse email"
                 className={`pl-10 h-12 transition-all duration-200 ${
                   fieldFocus === "email"
                     ? "ring-2 ring-primary/50 border-primary/50"
@@ -133,7 +133,7 @@ export function RegisterForm() {
               htmlFor="username"
               className="block text-sm font-medium text-foreground/80"
             >
-              Username
+              Nom d'utilisateur
             </label>
             <div
               className={`relative transition-all duration-200 ${
@@ -149,7 +149,7 @@ export function RegisterForm() {
                 onFocus={() => setFieldFocus("username")}
                 onBlur={() => setFieldFocus(null)}
                 disabled={isLoading}
-                placeholder="Choose a unique username"
+                placeholder="Choisissez un nom d'utilisateur unique"
                 className={`pl-10 pr-10 h-12 transition-all duration-200 ${
                   fieldFocus === "username"
                     ? "ring-2 ring-primary/50 border-primary/50"
@@ -175,7 +175,7 @@ export function RegisterForm() {
             </div>
             {formData.username && !usernameValid && (
               <p className="text-xs text-red-500">
-                Username must be at least 3 characters long
+                Le nom d'utilisateur doit contenir au moins 3 caractères
               </p>
             )}
           </div>
@@ -186,7 +186,7 @@ export function RegisterForm() {
               htmlFor="password"
               className="block text-sm font-medium text-foreground/80"
             >
-              Password
+              Mot de passe
             </label>
             <div
               className={`relative transition-all duration-200 ${
@@ -202,7 +202,7 @@ export function RegisterForm() {
                 onFocus={() => setFieldFocus("password")}
                 onBlur={() => setFieldFocus(null)}
                 disabled={isLoading}
-                placeholder="Create a strong password"
+                placeholder="Créez un mot de passe fort"
                 className={`pl-10 pr-10 h-12 transition-all duration-200 ${
                   fieldFocus === "password"
                     ? "ring-2 ring-primary/50 border-primary/50"
@@ -231,7 +231,7 @@ export function RegisterForm() {
             </div>
             {formData.password && !passwordStrong && (
               <p className="text-xs text-red-500">
-                Password must be at least 6 characters long
+                Le mot de passe doit contenir au moins 6 caractères
               </p>
             )}
           </div>
@@ -242,7 +242,7 @@ export function RegisterForm() {
               htmlFor="confirmPassword"
               className="block text-sm font-medium text-foreground/80"
             >
-              Confirm Password
+              Confirmez le mot de passe
             </label>
             <div
               className={`relative transition-all duration-200 ${
@@ -258,7 +258,7 @@ export function RegisterForm() {
                 onFocus={() => setFieldFocus("confirmPassword")}
                 onBlur={() => setFieldFocus(null)}
                 disabled={isLoading}
-                placeholder="Confirm your password"
+                placeholder="Confirmez votre mot de passe"
                 className={`pl-10 pr-10 h-12 transition-all duration-200 ${
                   fieldFocus === "confirmPassword"
                     ? "ring-2 ring-primary/50 border-primary/50"
@@ -296,7 +296,7 @@ export function RegisterForm() {
               </div>
             </div>
             {passwordsNoMatch && (
-              <p className="text-xs text-red-500">Passwords do not match</p>
+              <p className="text-xs text-red-500">Les mots de passe ne correspondent pas</p>
             )}
           </div>
 
@@ -328,10 +328,10 @@ export function RegisterForm() {
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Creating account...
+                Création du compte...
               </div>
             ) : (
-              "Create Account"
+              "Créer un compte"
             )}
           </Button>
         </form>

@@ -108,6 +108,9 @@ gamesRouter.get(
 
       res.json({
         games,
+        total: totalCount,
+        page: pageNum,
+        totalPages,
         pagination: {
           page: pageNum,
           limit: limitNum,

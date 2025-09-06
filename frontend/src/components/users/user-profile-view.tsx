@@ -23,7 +23,7 @@ import {
   XCircle,
   Archive
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface UserProfileViewProps {
   userId: string;
@@ -32,7 +32,7 @@ interface UserProfileViewProps {
 }
 
 // Helper function to safely render any value as string
-function safeRender(value: any): string {
+function safeRender(value: unknown): string {
   if (value === null || value === undefined) return "";
   if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
     return String(value);
@@ -55,7 +55,7 @@ function GameCard({ game }: { game: UserProfileGame }) {
     BACKLOG: "bg-gray-100 text-gray-800 border-gray-300",
   };
 
-  const statusIcons: Record<string, any> = {
+  const statusIcons: Record<string, React.ComponentType<{ className?: string }>> = {
     PLAYING: Target,
     COMPLETED: CheckCircle,
     DROPPED: XCircle,
@@ -97,7 +97,7 @@ function GameCard({ game }: { game: UserProfileGame }) {
           {(game.hoursPlayed && game.hoursPlayed > 0) && (
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Clock className="w-4 h-4" />
-              <span>{safeRender(Number(game.hoursPlayed || 0).toFixed(1))}h played</span>
+              <span>{safeRender(Number(game.hoursPlayed || 0).toFixed(2))}h played</span>
             </div>
           )}
           
@@ -132,7 +132,7 @@ function ProfileStats({ user }: { user: PublicUserProfile }) {
           <div className="flex items-center justify-center mb-2">
             <Clock className="w-6 h-6 text-primary" />
           </div>
-          <div className="text-2xl font-bold">{safeRender(Number(user.stats.totalHours || 0).toFixed(1))}h</div>
+          <div className="text-2xl font-bold">{safeRender(Number(user.stats.totalHours || 0).toFixed(2))}h</div>
           <div className="text-sm text-muted-foreground">Total Hours</div>
         </CardContent>
       </Card>
@@ -427,7 +427,7 @@ export function UserProfileView({
                             </span>
                           </div>
                           <span className="text-sm font-medium text-muted-foreground">
-                            {safeRender(Number(game.hoursPlayed || 0).toFixed(1))}h
+                            {safeRender(Number(game.hoursPlayed || 0).toFixed(2))}h
                           </span>
                         </div>
                       ))}

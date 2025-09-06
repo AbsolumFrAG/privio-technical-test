@@ -33,6 +33,9 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      STEAM_API_KEY: ${STEAM_API_KEY}
+      STEAM_BASE_URL: ${STEAM_BASE_URL}
+      STEAM_AUTH_REALM: ${STEAM_AUTH_REALM}
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
     volumes:

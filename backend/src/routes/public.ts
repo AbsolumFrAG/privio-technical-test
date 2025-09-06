@@ -29,6 +29,9 @@ router.get("/games/popular", async (req: Request, res: Response) => {
 
     if (type === "both" || type === "topRated") {
       // Get top rated games (average rating >= 4.0, minimum 2 ratings)
+      const topRatedLimit = type === "topRated" ? limitNum : Math.ceil(limitNum / 2);
+      const topRatedOffset = type === "topRated" ? offset : Math.floor(offset / 2);
+      
       topRatedGames = await (prisma.game.groupBy as any)({
         by: ["title"],
         where: {
@@ -66,8 +69,8 @@ router.get("/games/popular", async (req: Request, res: Response) => {
             rating: "desc",
           },
         },
-        skip: type === "topRated" ? offset : 0,
-        take: type === "topRated" ? limitNum : 10,
+        skip: topRatedOffset,
+        take: topRatedLimit,
       });
     }
 

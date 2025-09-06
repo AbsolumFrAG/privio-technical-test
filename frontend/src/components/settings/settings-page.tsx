@@ -21,13 +21,13 @@ export function SettingsPage() {
 
     if (urlParams.get("steamLinked") === "true") {
       const steamUsername = urlParams.get("steamUsername");
-      toast.success(`Steam account ${steamUsername} linked successfully!`);
+      toast.success(`Compte Steam ${steamUsername} lié avec succès !`);
 
       window.history.replaceState({}, "", window.location.pathname);
       refreshUser();
     } else if (urlParams.get("steamError")) {
       const errorMessage = urlParams.get("steamError");
-      toast.error(errorMessage || "Steam linking failed");
+      toast.error(errorMessage || "Liaison Steam échouée");
 
       // Clean up URL parameters
       window.history.replaceState({}, "", window.location.pathname);
@@ -37,9 +37,9 @@ export function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Settings</h1>
+        <h1 className="text-3xl font-bold">Paramètres</h1>
         <p className="text-muted-foreground">
-          Manage your account settings and preferences.
+          Gérez vos paramètres de compte et préférences.
         </p>
       </div>
 
@@ -50,22 +50,22 @@ export function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
-            Account Information
+            Informations du Compte
           </CardTitle>
           <CardDescription>
-            View and manage your account details.
+            Consultez et gérez les détails de votre compte.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Basic account settings will be available here in future updates.
+            Les paramètres de base du compte seront disponibles ici dans les futures mises à jour.
           </p>
         </CardContent>
       </Card>
 
       {/* Steam Integration */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Steam Integration</h2>
+        <h2 className="text-xl font-semibold mb-4">Intégration Steam</h2>
         <SteamIntegration />
       </div>
 

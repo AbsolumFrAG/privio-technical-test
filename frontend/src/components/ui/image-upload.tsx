@@ -43,7 +43,7 @@ export function ImageUpload({
       const formData = new FormData();
       formData.append('image', file);
 
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       if (!token) {
         throw new Error('Authentication required');
       }
@@ -99,9 +99,13 @@ export function ImageUpload({
     }
   };
 
-  const handleUrlSubmit = () => {
-    if (urlInput.trim()) {
-      onChange(urlInput.trim());
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value;
+    setUrlInput(newUrl);
+    
+    // Automatically apply the URL when it's entered (no confirmation needed)
+    if (newUrl.trim()) {
+      onChange(newUrl.trim());
     } else {
       onChange(undefined);
     }
@@ -140,18 +144,9 @@ export function ImageUpload({
             type="url"
             placeholder="https://example.com/image.jpg"
             value={urlInput}
-            onChange={(e) => setUrlInput(e.target.value)}
+            onChange={handleUrlChange}
             disabled={disabled}
           />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleUrlSubmit}
-            disabled={disabled}
-          >
-            Use URL
-          </Button>
         </div>
       ) : (
         <div
